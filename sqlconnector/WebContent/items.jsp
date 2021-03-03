@@ -28,6 +28,18 @@
 		 <input name="btnSubmit" type="submit" value="Save">
 	</form>
 	<%
+		 //Insert item----------------------------------
+		if (request.getParameter("itemCode") != null)
+		 {
+			 Item itemObj = new Item();
+			 String stsMsg = itemObj.insertItem(request.getParameter("itemCode"),
+			 request.getParameter("itemName"),
+			 request.getParameter("itemPrice"),
+			 request.getParameter("itemDesc"));
+			 session.setAttribute("statusMsg", stsMsg);
+		 }
+	%>
+	<%
 	 out.print(session.getAttribute("statusMsg"));
 	%>
 </body>
