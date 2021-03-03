@@ -38,9 +38,23 @@
 			 request.getParameter("itemDesc"));
 			 session.setAttribute("statusMsg", stsMsg);
 		 }
+	
+		//Delete item----------------------------------
+		if (request.getParameter("itemID") != null)
+		 {
+		 Item itemObj = new Item();
+		 String stsMsg = itemObj.deleteItem(request.getParameter("itemID"));
+		 session.setAttribute("statusMsg", stsMsg);
+		 } 
 	%>
 	<%
 	 out.print(session.getAttribute("statusMsg"));
+	%>
+	<br> 
+	
+	<%
+	 Item itemObj = new Item();
+	 out.print(itemObj.readItems());
 	%>
 </body>
 </html>

@@ -13,7 +13,7 @@ public class Item {
 	 try
 	 {
 		 Class.forName("com.mysql.jdbc.Driver");
-		 con= DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/myadmin/test",
+		 con= DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/myadmin/items",
 	 "root", "");
 		 //For testing
 		 System.out.print("Successfully connected");
@@ -111,5 +111,35 @@ public class Item {
 	 System.err.println(e.getMessage());
 	 }
 	return output;
+	}
+	
+	
+	public String deleteItem(String itemID)
+	{
+		 String output = "";
+		try
+		 {
+			 Connection con = connect();
+			 if (con == null)
+			 {
+				 return "Error while connecting to the database for deleting.";
+			 }
+			 // create a prepared statement
+			 String query = "delete from items where itemID=?";
+			 PreparedStatement preparedStmt = con.prepareStatement(query);
+			 // binding values
+			 preparedStmt.setInt(1, Integer.parseInt(itemID));
+		
+			 // execute the statement
+			 preparedStmt.execute();
+			 con.close();
+			 output = "Deleted successfully";
+		 }
+		catch (Exception e)
+		 {
+		 output = "Error while deleting the item.";
+		 System.err.println(e.getMessage());
+		 }
+		return output;
 	}
 }
