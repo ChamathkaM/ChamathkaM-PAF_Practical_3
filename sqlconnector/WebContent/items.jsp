@@ -28,7 +28,8 @@
 		 <input name="btnSubmit" type="submit" value="Save">
 	</form>
 	<%
-		 //Insert item----------------------------------
+		//Insert item----------------------------------
+		
 		if (request.getParameter("itemCode") != null)
 		 {
 			 Item itemObj = new Item();
@@ -38,6 +39,18 @@
 			 request.getParameter("itemDesc"));
 			 session.setAttribute("statusMsg", stsMsg);
 		 }
+	
+		//update item
+		/*if (request.getParameter("itemCode")!= null) // redirect to the update method
+		{
+			Item itemObj = new Item();
+			String stsMsg = itemObj.updateItem(Integer.parseInt(request.getParameter("itemID")),
+					request.getParameter("itemCode"),
+					request.getParameter("itemName"),
+					request.getParameter("itemPrice"),
+					request.getParameter("itemDesc"));
+					session.setAttribute("statusMsg", stsMsg);
+		}*/
 	
 		//Delete item----------------------------------
 		if (request.getParameter("itemID") != null)

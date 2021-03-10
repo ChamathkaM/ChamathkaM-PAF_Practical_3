@@ -5,16 +5,17 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Connection;
 
-public class Item {
+public class Item{
+
+	//creating connection
 	public Connection connect()
 	{
-	 Connection con = null;
+		Connection con = null;
 
-	 try
-	 {
+		try
+		{
 		 Class.forName("com.mysql.jdbc.Driver");
-		 con= DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/myadmin/items",
-	 "root", "");
+		 con= DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/myadmin","root", "");
 		 //For testing
 		 System.out.print("Successfully connected");
 	 	}
@@ -26,12 +27,12 @@ public class Item {
 	 return con;
 	}
 	
-	
-	public String insertItem(String code, String name, String price, String desc) {
+
+	public String insertItem(String code, String name, String price, String desc) 
 		{
 		 String output = "";
 		try
-			 {
+		 {
 			 Connection con = connect();
 			 if (con == null)
 			 {
@@ -59,9 +60,10 @@ public class Item {
 		 }
 		return output;
 		}
-	}
+	
 
 	public String readItems()
+	
 	{
 	 String output = "";
 	try
@@ -99,7 +101,8 @@ public class Item {
 	 + "<input name='btnRemove' "
 	 + " type='submit' value='Remove'>"
 	 + "<input name='itemID' type='hidden' "
-	 + " value='" + itemID + "'>" + "</form></td></tr>";
+	 + " value='" + itemID + "'>"
+	 + "</form></td></tr>";
 	 }
 	 con.close();
 	 // Complete the html table
@@ -113,6 +116,88 @@ public class Item {
 	return output;
 	}
 	
+	//Update an item
+	/*	public String updateItem(int ID,String code, String name, String price, String desc)
+		{
+		// for testing System.out.println(ID);
+		String output = "";
+		try
+		{
+			Connection con = connect();
+			if (con == null)
+			{
+				return "Error while connecting to the database";
+			}
+			// create a prepared statement
+			String query = "update items set itemCode=?,itemName =?,itemPrice=?,itemDesc=? where itemID = ?";
+			PreparedStatement preparedStmt = con.prepareStatement(query);
+			// binding values
+			preparedStmt.setString(1, code);
+			preparedStmt.setString(2, name);
+			preparedStmt.setDouble(3,Double.parseDouble(price));
+			preparedStmt.setString(4, desc);
+			preparedStmt.setInt(5, ID);
+			//execute the statement
+			preparedStmt.executeUpdate();
+			con.close();
+			output = "Updated successfully";
+		}
+		catch (Exception e)
+		{
+			output = "Error while updating";
+			System.err.println(e.getMessage());
+		}
+		return output;
+		}*/
+		
+		
+		
+		//Retrieve selected item  to the form for update process
+		public String readSelectedItem(int id)
+		{
+			//For testing System.out.print(id);
+			String output = "";
+			try
+			{
+				Connection con = connect();
+				if (con == null)
+				{
+					return "Error while connecting to the database for selected item reading.";
+				}
+				String query = "select * from items where itemID = ? ";
+				PreparedStatement preparedStmt = con.prepareStatement(query);
+				preparedStmt.setInt(1, id);
+				ResultSet rs = preparedStmt.executeQuery();
+				// iterate through the rows in the result set
+				while (rs.next())
+				{
+					String itemID = Integer.toString(rs.getInt("itemID"));
+					String itemCode = rs.getString("itemCode");
+					String itemName = rs.getString("itemName");
+					String itemPrice = Double.toString(rs.getDouble("itemPrice"));
+					String itemDesc = rs.getString("itemDesc");
+					output += "<form method=post action=items.jsp>"
+							+ " <input name='action' value='update' type='hidden'>"
+							+ " Item ID: '"+itemID+ "'<br>"
+							+ " Item code: <input name=itemCode type=text value='"+itemCode+ "'><br>"
+							+ " Item name: <input name=itemName type=text value='"+itemName+ "'><br>"
+							+ " Item price: <input name=itemPrice type=text value='"+itemPrice+ "'><br>"
+							+ " Item description: <input name=itemDesc type=text value='"+itemDesc+ "'><br>"
+							+ " <input name='itemID' type='hidden' value='" + itemID + "'>"
+							+ " <input name=btnSubmit type=submit value=Update >"
+							+ " </form>";
+				}
+				con.close();
+				// Complete the html table
+				output += "</table>";
+		}
+		catch (Exception e)
+		{
+			output = "Error while reading the one item.";
+			System.err.println(e.getMessage());
+		}
+		return output;
+		}
 	
 	public String deleteItem(String itemID)
 	{
@@ -143,3 +228,4 @@ public class Item {
 		return output;
 	}
 }
+
